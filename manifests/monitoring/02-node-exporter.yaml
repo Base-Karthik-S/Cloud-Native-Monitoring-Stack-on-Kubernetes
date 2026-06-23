@@ -1,0 +1,35 @@
+# Node Exporter (DaemonSet) — deployed per-node for host-level metrics
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: node-exporter
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: node-exporter
+  template:
+    metadata:
+      labels:
+        app: node-exporter
+    spec:
+      containers:
+      - name: node-exporter
+        image: prom/node-exporter
+        ports:
+        - containerPort: 9100
+---
+# NOTE: This Service is required for Prometheus to resolve the
+# 'node-exporter:9100' scrape target. It was not pictured in the
+# report screenshots; verify it matches the version on your cluster.
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-exporter
+  namespace: monitoring
+spec:
+  selector:
+    app: node-exporter
+  ports:
+  - port: 9100
+    targetPort: 9100

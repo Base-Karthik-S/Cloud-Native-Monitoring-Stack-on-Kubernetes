@@ -1,0 +1,59 @@
+# cAdvisor (DaemonSet) — container-level metrics.
+# Adapted for MicroK8s: mounts the containerd socket instead of docker.sock.
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: cadvisor
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: cadvisor
+  template:
+    metadata:
+      labels:
+        app: cadvisor
+    spec:
+      containers:
+      - name: cadvisor
+        image: gcr.io/cadvisor/cadvisor:v0.47.2
+        securityContext:
+          privileged: true
+        ports:
+        - containerPort: 8080
+        args:
+        - --containerd=/var/run/microk8s-socket/containerd.sock
+        - --docker_only=false
+        - --disable_metrics=disk
+        volumeMounts:
+        - name: rootfs
+          mountPath: /rootfs
+          readOnly: true
+        - name: microk8s-socket-dir
+          mountPath: /var/run/microk8s-socket
+          readOnly: true
+        - name: sys
+          mountPath: /sys
+          readOnly: true
+      volumes:
+      - name: rootfs
+        hostPath:
+          path: /
+      - name: microk8s-socket-dir
+        hostPath:
+          path: /var/run/snap/microk8s/common/run
+      - name: sys
+        hostPath:
+          path: /sys
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cadvisor
+  namespace: monitoring
+spec:
+  selector:
+    app: cadvisor
+  ports:
+  - port: 8080
+    targetPort: 8080

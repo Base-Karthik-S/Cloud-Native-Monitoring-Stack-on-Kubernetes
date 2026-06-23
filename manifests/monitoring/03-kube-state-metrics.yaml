@@ -1,0 +1,37 @@
+# Kube State Metrics Deployment — exposes Kubernetes object state
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kube-state-metrics
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kube-state-metrics
+  template:
+    metadata:
+      labels:
+        app: kube-state-metrics
+    spec:
+      serviceAccountName: prometheus
+      containers:
+      - name: kube-state-metrics
+        image: registry.k8s.io/kube-state-metrics/kube-state-metrics:v2.0.0
+        ports:
+        - containerPort: 8080
+---
+# NOTE: This Service is required for Prometheus to resolve the
+# 'kube-state-metrics:8080' scrape target. It was not pictured in the
+# report screenshots; verify it matches the version on your cluster.
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-state-metrics
+  namespace: monitoring
+spec:
+  selector:
+    app: kube-state-metrics
+  ports:
+  - port: 8080
+    targetPort: 8080
