@@ -8,7 +8,7 @@
 [![Docker](https://img.shields.io/badge/Docker-containers-2496ED.svg?logo=docker&logoColor=white)](https://www.docker.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-> Newcastle University — *CSC8110 Cloud Computing*, 2025/26.
+> Newcastle University — *Cloud Computing*, 2025/26.
 
 ---
 
