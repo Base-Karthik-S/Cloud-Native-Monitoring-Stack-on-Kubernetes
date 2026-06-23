@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java-benchmark-deployment
+  labels:
+    app: java-benchmark
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: java-benchmark
+  template:
+    metadata:
+      labels:
+        app: java-benchmark
+    spec:
+      containers:
+      - name: java-benchmark
+        image: nclcloudcomputing/javabenchmarkapp
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: java-benchmark-service
+spec:
+  type: NodePort
+  selector:
+    app: java-benchmark
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+    nodePort: 30000
