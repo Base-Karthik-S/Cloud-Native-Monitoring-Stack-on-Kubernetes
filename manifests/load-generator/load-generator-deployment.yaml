@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: load-generator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: load-generator
+  template:
+    metadata:
+      labels:
+        app: load-generator
+    spec:
+      containers:
+      - name: load-generator
+        image: localhost:32000/load-generator:latest
+        imagePullPolicy: Always
+        env:
+        - name: TARGET
+          value: "http://java-benchmark-service.default.svc.cluster.local:8080/primecheck"
+        - name: FREQUENCY
+          value: "20"
