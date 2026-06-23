@@ -59,8 +59,6 @@ Everything is declarative YAML — apply the manifests and the whole environment
 ```
 cloud-native-monitoring-stack/
 ├── README.md
-├── LICENSE
-├── .gitignore
 ├── manifests/
 │   ├── 00-dashboard-admin.yaml          # Dashboard admin-user + RBAC
 │   ├── 01-java-app.yaml                 # Java app Deployment + NodePort Service
